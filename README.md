@@ -1,1 +1,7 @@
-# cy_afkzone
+# Report system
+
+Only what u need do is configurate config.lua
+
+Requirements 
+- ox_lib
+- ox_inventory
