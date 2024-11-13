@@ -1,4 +1,4 @@
-# Report system
+# Afk Zone
 
 Only what u need do is configurate config.lua
 
