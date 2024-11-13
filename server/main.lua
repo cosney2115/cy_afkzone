@@ -30,11 +30,17 @@ RegisterNetEvent('cy_afk:server:enter', function()
         return
     end
 
+    math.randomseed(os.time())
+    local randomBucket = math.random(1, 100000000)
+        
     afker[_source] = {
         startTime = os.time(),
         lastRewardTime = os.time(),
-        totalMinutes = 0
+        totalMinutes = 0,
+        routingBucket = randomBucket
     }
+
+    SetPlayerRoutingBucket(_source, randomBucket)
 end)
 
 RegisterNetEvent('cy_afk:server:leave', function()
@@ -46,6 +52,7 @@ RegisterNetEvent('cy_afk:server:leave', function()
     end
 
     afker[_source] = nil
+    SetPlayerRoutingBucket(_source, 0)
 end)
 
 RegisterNetEvent('cy_afk:server:addReward', function()
@@ -57,6 +64,12 @@ RegisterNetEvent('cy_afk:server:addReward', function()
     end
 
     local playerData = afker[_source]
+
+    if playerData.routingBucket ~= GetPlayerRoutingBucket(_source) then
+        ConfigData.BanFunction(_source)
+        afker[_source] = nil
+        return
+    end
 
     local currentTime = os.time()
     local timeDiff = currentTime - (playerData.lastRewardTime or playerData.startTime)
